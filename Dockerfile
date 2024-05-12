@@ -6,7 +6,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN ./mvnw spring-boot:run
+RUN chmod +x mvnw && ./mvnw spring-boot:run
 
 FROM openjdk:17-jdk-slim
 
