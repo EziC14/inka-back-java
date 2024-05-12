@@ -6,13 +6,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.0</version>
+		<version>3.2.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.rest.zegel</groupId>
-	<artifactId>RestZegelEjemplo</artifactId>
+	<groupId>com.rest.inka</groupId>
+	<artifactId>RestInka</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>RestZegelEjemplo</name>
+	<name>RestInka</name>
 	<description>Demo project for Spring Boot</description>
 	<properties>
 		<java.version>17</java.version>

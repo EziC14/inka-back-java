@@ -1,24 +1,17 @@
 FROM ubuntu:latest AS build
 
-# Update package lists
-RUN apt-get update
+RUN apt-get update && apt-get install -y openjdk-17-jdk
 
-# Install Maven
-RUN apt-get install maven -y
+WORKDIR /app
 
-# Copy project files
 COPY . .
 
-# Build the application using Maven
-RUN mvn package
+RUN ./mvnw spring-boot:run
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:17-jdk-slim
 
-# Expose port 8080
 EXPOSE 8080
 
-# Copy the JAR file from the build stage
-COPY --from=build target/how-much-pay-0.0.1.jar /app.jar
+COPY --from=build /app/target/*.jar app.jar
 
-# Entrypoint to run the application
-ENTRYPOINT [ "java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
