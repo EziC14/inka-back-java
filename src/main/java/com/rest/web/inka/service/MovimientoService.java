@@ -9,11 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.rest.web.inka.dao.IMovimientoDao;
-import com.rest.web.inka.dao.IProductoDao;
 import com.rest.web.inka.models.Movimiento;
 import com.rest.web.inka.models.MovimientoDto;
-import com.rest.web.inka.models.Producto;
-import com.rest.web.inka.models.ProductoDto;
 import com.rest.web.inka.utilidades.PaginationMod;
 
 @Service

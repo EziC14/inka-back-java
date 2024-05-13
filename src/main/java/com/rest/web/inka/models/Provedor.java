@@ -27,8 +27,9 @@ public class Provedor implements Serializable{
 
 	private String ruc;
 	
-	@OneToMany(mappedBy = "movimiento",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "provedor", cascade = CascadeType.ALL)
 	private List<Movimiento> movimiento;
+
 
 	public Provedor() {
 

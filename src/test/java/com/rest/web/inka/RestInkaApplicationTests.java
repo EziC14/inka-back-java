@@ -1,10 +1,10 @@
-package com.rest.web.zegel;
+package com.rest.web.inka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RestZegelEjemploApplicationTests {
+class RestInkaApplicationTests {
 
 	@Test
 	void contextLoads() {

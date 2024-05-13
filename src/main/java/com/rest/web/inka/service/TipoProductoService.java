@@ -9,10 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.rest.web.inka.dao.ICategoriaProductoDao;
 import com.rest.web.inka.dao.ITipoProductoDao;
-import com.rest.web.inka.models.CategoriaProductos;
-import com.rest.web.inka.models.CategoriaProductosDto;
+
 import com.rest.web.inka.models.TipoProducto;
 import com.rest.web.inka.models.TipoProductoDto;
 import com.rest.web.inka.utilidades.PaginationMod;

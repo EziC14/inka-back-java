@@ -1,21 +1,12 @@
 package com.rest.web.inka.controllers;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,22 +16,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.rest.web.inka.models.CategoriaProductos;
 import com.rest.web.inka.models.Movimiento;
 import com.rest.web.inka.models.MovimientoDto;
-import com.rest.web.inka.models.Producto;
-import com.rest.web.inka.models.ProductoDto;
 import com.rest.web.inka.models.Provedor;
 import com.rest.web.inka.models.TipoMovimiento;
-import com.rest.web.inka.models.TipoProducto;
-import com.rest.web.inka.service.ICategoriaProductoService;
 import com.rest.web.inka.service.IMovimientoService;
-import com.rest.web.inka.service.IProductoService;
 import com.rest.web.inka.service.IProvedorService;
 import com.rest.web.inka.service.ITipoMovimientoService;
-import com.rest.web.inka.service.ITipoProductoService;
 import com.rest.web.inka.utilidades.PaginationMod;
 import com.rest.web.inka.utilidades.Utilidades;
 

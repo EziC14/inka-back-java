@@ -3,22 +3,14 @@ package com.rest.web.inka.models;
 import java.io.Serializable;
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 public class MovimientoDto implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-private Integer id;
+	private Integer id;
 	
-
+	private String nombre;
 	private String cantidad;
 
 	private String motivo;
@@ -39,6 +31,15 @@ private Integer id;
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+	
+	
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getCantidad() {

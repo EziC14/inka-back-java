@@ -1,13 +1,10 @@
-FROM ubuntu:latest AS build
-
-RUN apt-get update && apt-get install -y openjdk-17-jdk
+FROM maven:3.8.1-openjdk-17 AS build
 
 WORKDIR /app
 
 COPY . .
 
-RUN chmod +x ./mvnw
-RUN ./mvnw spring-boot:run
+RUN mvn clean install
 
 FROM openjdk:17-jdk-slim
 
@@ -16,3 +13,4 @@ EXPOSE 8080
 COPY --from=build /app/target/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
+

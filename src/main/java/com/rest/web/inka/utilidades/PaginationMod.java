@@ -3,7 +3,6 @@ package com.rest.web.inka.utilidades;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 
-import com.rest.web.inka.models.CategoriaProductos;
 
 import java.util.List;
 

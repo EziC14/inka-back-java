@@ -24,7 +24,7 @@ public class TipoMovimiento implements Serializable{
 	
 	private String nombre;
 
-	@OneToMany(mappedBy = "movimiento",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "tipo", cascade = CascadeType.ALL)
 	private List<Movimiento> movimiento;
 
 	public TipoMovimiento() {

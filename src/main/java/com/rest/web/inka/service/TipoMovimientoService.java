@@ -8,10 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.rest.web.inka.dao.IMovimientoDao;
 import com.rest.web.inka.dao.ITipoMovimientoDao;
-import com.rest.web.inka.models.Movimiento;
-import com.rest.web.inka.models.MovimientoDto;
 import com.rest.web.inka.models.TipoMovimiento;
 import com.rest.web.inka.models.TipoMovimientoDto;
 import com.rest.web.inka.utilidades.PaginationMod;
