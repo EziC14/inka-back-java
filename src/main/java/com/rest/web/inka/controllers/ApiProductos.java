@@ -72,7 +72,7 @@ public class ApiProductos {
 	
 		HashMap<Object, Object> map = new HashMap<Object, Object>();
 		
-		PaginationMod<ProductoDto> enviar = productoService.listarProductoDtoPaginado(nombre,PageRequest.of(page, 5, Sort.by("id").descending()));
+		PaginationMod<ProductoDto> enviar = productoService.listarProductoDtoPaginado(nombre,PageRequest.of(page, 9, Sort.by("id").descending()));
 		
 		List<CategoriaProductos> categoria = categoriaServiceProduto.listarCategoriaProducto();
 		
