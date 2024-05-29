@@ -87,24 +87,6 @@ public class ApiProductos {
 		return productoService.buscarIdProducto(id);
 	}
 
-	@PostMapping("/productos")
-	public ResponseEntity<Object> guardarProducto(@RequestBody Producto producto){
-
-			CategoriaProductos catPro = categoriaProducto.buscarIdProducto(producto.getCategoriaProductos().getId());
-			
-			if(catPro == null) {
-				return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ LA CATEGORÍA");
-			}
-			
-			
-			producto.setStock(0);
-			producto.setImagen("");
-			productoService.guardar(producto);
-			
-			return Utilidades.generateResponseTrue(HttpStatus.CREATED, "PRODUCTO CREADO CORRECTAMENTE");
-		
-	}
-
 	@PostMapping("/productos-imagen")
 	public ResponseEntity<Object> guardarProductoImagen(Producto producto, @RequestParam("imagenes") MultipartFile multiPart){
 			System.out.println("Body de la solicitud: " + producto);
@@ -177,21 +159,6 @@ public class ApiProductos {
 				
 			}
 		
-	}
-
-	@PutMapping("/productos")
-	public ResponseEntity<Object> actualizarProducto(@RequestBody Producto producto) {
-
-		Producto pr = productoService.buscarIdProducto(producto.getId());
-				
-		if (pr == null) {
-			return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "EL PRODUCTO NO SE ENCONTRÓ");
-		}
-		producto.setStock(pr.getStock());
-		producto.setImagen(pr.getImagen());
-		productoService.guardar(producto);
-
-		return Utilidades.generateResponseTrue(HttpStatus.CREATED, "PRODUCTO ACTUALIZADO CORRECTAMENTE");
 	}
 
 	@PostMapping("/eliminar")

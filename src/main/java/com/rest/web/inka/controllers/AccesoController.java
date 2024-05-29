@@ -30,37 +30,25 @@ public class AccesoController {
 	
 	@Autowired
 	private AuthenticationManager authManager;
-	
 	@Autowired
 	private JwtTokenUtil jwtUtil;
-	
 	@Autowired
 	private IUsuarioService usuarioService;
-	
 	@Autowired
 	private ModelMapper mapper;
-	
 	@Autowired
 	private IUsuarioDao usuarioDao;
 
-
-//	@Autowired
-//	private IPersonalService personalService;
-	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody AuthRequest request)
 	{
 		try {
-			
 			Authentication authentication = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(request.getCorreo(), request.getPassword()));
 			System.out.println(authentication);
-			
 			Optional<Usuario> user = usuarioService.buscarPorCorreo(request.getCorreo());
 			Integer id = user.get().getId();
-
 			Usuario usu =  usuarioDao.findById(id).orElse(null);
 			UsuarioDto dto = mapper.map(usu, UsuarioDto.class);
-			
 			String nombre = dto.getPerfilUsuario().getNombres(); 
 			String apellido = dto.getPerfilUsuario().getApellidos();
 			String telefono = dto.getPerfilUsuario().getTelefono();
@@ -68,18 +56,10 @@ public class AccesoController {
 			for (RolDto rol : dto.getRoles()) {
 				rol_name = rol.getNombre();
 			}
-	
-//			Optional<Personal> personal = personalService.buscarPorCorreo(request.getCorreo());
-//
-//			String nombre = user.get().getNombre() + " " + user.get().getApellido();
-			String accessToken = jwtUtil.generarToken(user.get());
-						
+			String accessToken = jwtUtil.generarToken(user.get());			
 			AuthResponse response = new AuthResponse(nombre,apellido,telefono,request.getCorreo(), accessToken, rol_name);
-			
-			return ResponseEntity.ok(response);
-			
-		} catch (BadCredentialsException e) {
-			
+			return ResponseEntity.ok(response);		
+		} catch (BadCredentialsException e) {	
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 	}
