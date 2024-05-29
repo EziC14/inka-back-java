@@ -142,7 +142,8 @@ public class ApiProductos {
 				if(nombreImagen=="no") {
 					return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "ARCHIVO NO VALIDO");
 				}
-				producto.setStock(pr.getStock());
+				
+				producto.setStock(producto.getStock());
 				producto.setImagen(nombreImagen);
 				producto.setFecha(new Date());
 				productoService.guardar(producto);
@@ -151,6 +152,7 @@ public class ApiProductos {
 				
 				
 			}else {
+				System.out.println(pr.getStock());
 				producto.setStock(pr.getStock());
 				producto.setImagen(pr.getImagen());
 				producto.setFecha(new Date());

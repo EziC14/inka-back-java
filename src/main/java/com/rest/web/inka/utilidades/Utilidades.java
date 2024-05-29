@@ -1,8 +1,11 @@
 package com.rest.web.inka.utilidades;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.rest.web.inka.models.ApiError;
+
+import io.micrometer.common.util.StringUtils;
 
 public class Utilidades {
 	public static ResponseEntity<Object> generateResponse(HttpStatus status, String mensaje) {
@@ -64,31 +69,48 @@ public class Utilidades {
 		return url.toLowerCase(Locale.ENGLISH);
 	}
 
+	public static String limpiarNombreArchivo(String nombreArchivo) {
+        if (nombreArchivo == null || nombreArchivo.isEmpty()) {
+            return "";
+        }
+        // Elimina caracteres especiales y espacios en blanco
+        String nombreLimpio = nombreArchivo.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+        // Limita la longitud del nombre del archivo a 255 caracteres
+        if (nombreLimpio.length() > 255) {
+            nombreLimpio = nombreLimpio.substring(0, 255);
+        }
+        return nombreLimpio;
+    }
+
 	public static String guardarArchivo(MultipartFile multipart) {
-				
-		if(Utilidades.validaImagen(multipart.getContentType())== false) {
-			
-			return "no";
-		}else {
-			
-			long time = System.currentTimeMillis();
-			String nombre = time+Utilidades.getExtension(multipart.getContentType());
-			
-			Path rutaArchivo = Paths.get("imagenes").resolve(nombre).toAbsolutePath();
-			
-			try {
-				
-				//File imagenFile = new File(ruta+nombre);
-				//multipart.transferTo(imagenFile);
-				
-				Files.copy(multipart.getInputStream(), rutaArchivo);
-				
-				return nombre;
-			}catch (Exception e) {
-				return null;
-			}
-		}
-	}
+    if (!Utilidades.validaImagen(multipart.getContentType())) {
+        return "no";
+    } else {
+        try {
+            String nombreArchivo = multipart.getOriginalFilename();
+            String extension = Utilidades.getExtension(multipart.getContentType());
+            String nombreLimpio = Utilidades.limpiarNombreArchivo(nombreArchivo);
+            String nombreUnico = System.currentTimeMillis() + "_" + nombreLimpio;
+            Path rutaDirectorio = Paths.get("imagenes").toAbsolutePath();
+            Path rutaArchivo = rutaDirectorio.resolve(nombreUnico);
+            System.out.println(rutaArchivo);
+            if (!Files.exists(rutaDirectorio)) {
+                Files.createDirectories(rutaDirectorio);
+            }
+            
+            try (InputStream inputStream = multipart.getInputStream()) {
+                Files.copy(inputStream, rutaArchivo, StandardCopyOption.REPLACE_EXISTING);
+                return nombreUnico;
+            } catch (IOException e) {
+                e.printStackTrace(); // Manejo de error detallado
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace(); // Manejo de error detallado
+            return null;
+        }
+    }
+}
 
 	public static boolean validaImagen(String mime) {
 
