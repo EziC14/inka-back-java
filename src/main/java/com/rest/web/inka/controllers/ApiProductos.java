@@ -163,6 +163,44 @@ public class ApiProductos {
 		
 	}
 
+	@PostMapping("/productos")
+	public ResponseEntity<Object> guardarProducto(@RequestBody Producto producto){
+
+			CategoriaProductos catPro = categoriaProducto.buscarIdProducto(producto.getCategoriaProductos().getId());
+			if(catPro == null) {
+				return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ LA CATEGORÍA");
+			}
+			
+			TipoProducto tipPro = tipoProducto.buscarIdProducto(producto.getTipoProducto().getId());
+			
+			if(tipPro == null) {
+				return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ LA TIPO");
+			}
+
+			producto.setStock(0);
+			producto.setImagen(producto.getImagen());
+			productoService.guardar(producto);
+			
+			return Utilidades.generateResponseTrue(HttpStatus.CREATED, "PRODUCTO CREADO CORRECTAMENTE");
+		
+	}
+
+	@PutMapping("/productos")
+	public ResponseEntity<Object> actualizarProducto(@RequestBody Producto producto) {
+
+		Producto pr = productoService.buscarIdProducto(producto.getId());
+				
+		if (pr == null) {
+			return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "EL PRODUCTO NO SE ENCONTRÃ“");
+		}
+		
+		producto.setStock(producto.getStock());
+		producto.setImagen(producto.getImagen());
+		productoService.guardar(producto);
+
+		return Utilidades.generateResponseTrue(HttpStatus.CREATED, "PRODUCTO ACTUALIZADO CORRECTAMENTE");
+	}
+
 	@PostMapping("/eliminar")
 	public ResponseEntity<Object> eliminarProducto(@RequestBody Producto producto) {
 
