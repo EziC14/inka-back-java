@@ -10,6 +10,8 @@ public interface IProductoService {
 		 
 	PaginationMod<ProductoDto> listarProductoDtoPaginado(String nombre, Pageable pageable);
 
+	PaginationMod<ProductoDto> buscarProductoPorNombrePaginado(String nombre, Pageable pageable);
+
 	Producto buscarIdProducto(Integer id);
 	
 	Producto guardar(Producto producto);

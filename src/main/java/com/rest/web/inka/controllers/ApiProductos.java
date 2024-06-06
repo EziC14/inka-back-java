@@ -81,6 +81,21 @@ public class ApiProductos {
 		
 	    return map;
 	}
+
+	@GetMapping("/listar/name")
+	public Object listarNombre(@RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "") String nombre) {
+		HashMap<Object, Object> map = new HashMap<>();
+		
+		PaginationMod<ProductoDto> enviar = productoService.buscarProductoPorNombrePaginado(nombre,
+				PageRequest.of(page, 9, Sort.by("id").descending()));
+		
+		List<CategoriaProductos> categoria = categoriaServiceProduto.listarCategoriaProducto();
+		
+		map.put("productos", enviar);
+		map.put("categorias", categoria);
+		
+		return map;
+	}
 	
 	@GetMapping("/productos/{id}")
 	public Producto listarId(@PathVariable Integer id) {

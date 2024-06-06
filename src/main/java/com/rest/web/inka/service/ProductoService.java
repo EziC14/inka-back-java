@@ -1,7 +1,10 @@
 package com.rest.web.inka.service;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.List;
 
+import org.hibernate.mapping.List;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,6 +36,16 @@ public class ProductoService implements IProductoService{
 		return paginationMod;
 	}
 	
+	@Override
+	public PaginationMod<ProductoDto> buscarProductoPorNombrePaginado(String nombre, Pageable pageable) {
+		Page<Producto> paginacion = productoDao.findByNombreContaining(nombre, pageable);
+		
+		PaginationMod<ProductoDto> paginationMod = new PaginationMod<>();
+		List<ProductoDto> productoDtos = paginacion.getContent().stream().map(producto -> mapper.map(producto, ProductoDto.class)).collect(Collectors.toList());
+		
+		paginationMod.setValue(paginacion, productoDtos);
+		return paginationMod;
+	}
 
 	@Override
 	public Producto buscarIdProducto(Integer id) {
