@@ -51,17 +51,30 @@ public class ApiMovimiento {
 	}
 	
 	@GetMapping("/listar")
-	public Object listar(@RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "") String nombre) {
-	
-		HashMap<Object, Object> map = new HashMap<Object, Object>();
-		
-		PaginationMod<MovimientoDto> enviar = movimientoService.listarMovimientoDtoPaginado(nombre,PageRequest.of(page, 5, Sort.by("id").descending()));
-		
-//		List<CategoriaProductos> categoria = categoriaServiceProduto.listarCategoriaProducto();
-		
-		map.put("movimientos", enviar);
-//	    map.put("categorias", categoria);
-		
+	public Object listar(@RequestParam(required = false, defaultValue = "0") Integer page,
+	                     @RequestParam(required = false, defaultValue = "") String nombre) {
+	    
+	    HashMap<Object, Object> map = new HashMap<Object, Object>();
+
+	    // Verificar si los parámetros de paginación son válidos
+	    if (page < 0) {
+	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "El número de página debe ser mayor o igual a 0");
+	    }
+
+	    // Verificar si el nombre es nulo
+	    if (nombre == null) {
+	        nombre = "";
+	    }
+
+	    PaginationMod<MovimientoDto> enviar = movimientoService.listarMovimientoDtoPaginado(nombre, 
+	                                                PageRequest.of(page, 9, Sort.by("id").descending()));
+
+	    // Verificar si se obtuvo algún resultado
+	    if (enviar == null || enviar.getContent().isEmpty()) {
+	        return Utilidades.generateResponse(HttpStatus.NOT_FOUND, "No se encontraron movimientos");
+	    }
+
+	    map.put("movimientos", enviar);
 	    return map;
 	}
 	
@@ -71,26 +84,35 @@ public class ApiMovimiento {
 	}
 
 	@PostMapping("/movimiento")
-	public ResponseEntity<Object> guardarMovimiento(@RequestBody Movimiento movimiento){
+	public ResponseEntity<Object> guardarMovimiento(@RequestBody Movimiento movimiento) {
+	    if (movimiento.getTipo() == null || movimiento.getTipo().getId() == null) {
+	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "El tipo de movimiento es requerido");
+	    }
+	    
+	    TipoMovimiento tipMov = tipoMovimiento.buscarIdTipoMovimiento(movimiento.getTipo().getId());
+	    if (tipMov == null) {
+	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL TIPO");
+	    }
+	    
+	    if (tipMov.getId() == 1) {
+	        // Si el tipo de movimiento es 1, se debe validar la presencia del proveedor
+	        if (movimiento.getProvedor() == null || movimiento.getProvedor().getId() == null) {
+	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "El proveedor es requerido");
+	        }
+	        
+	        Provedor prov = provedorService.buscarIdProvedor(movimiento.getProvedor().getId());
+	        if (prov == null) {
+	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL PROVEEDOR");
+	        }
+	    } else if (tipMov.getId() == 2) {
+	        // Si el tipo de movimiento es 2, no se requiere proveedor
+	        if (movimiento.getProvedor() != null && movimiento.getProvedor().getId() != null) {
+	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "No se debe especificar proveedor para este tipo de movimiento");
+	        }
+	    }
 
-			TipoMovimiento tipMov = tipoMovimiento.buscarIdTipoMovimiento(movimiento.getTipo().getId());
-			
-			if(tipMov == null) {
-				return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL TIPO");
-			}
-			
-			
-			Provedor prov = provedorService.buscarIdProvedor(movimiento.getProvedor().getId());
-			
-			if(prov == null) {
-				return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL PROVEDOR");
-			}
-			
-
-			movimientoService.guardar(movimiento);
-			
-			return Utilidades.generateResponseTrue(HttpStatus.CREATED, "PRODUCTO CREADO CORRECTAMENTE");
-		
+	    movimientoService.guardar(movimiento);
+	    return Utilidades.generateResponseTrue(HttpStatus.CREATED, "MOVIMIENTO CREADO CORRECTAMENTE");
 	}
 
 	@PutMapping("/movimiento")

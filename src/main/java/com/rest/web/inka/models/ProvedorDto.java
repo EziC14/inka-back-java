@@ -8,17 +8,17 @@ public class ProvedorDto implements Serializable {
 	
 	private Integer id;
 	
-	public Integer getRuc() {
+	public String getRuc() {
 		return ruc;
 	}
 
-	public void setRuc(Integer ruc) {
+	public void setRuc(String ruc) {
 		this.ruc = ruc;
 	}
 
 	private String nombre;
 	
-	private Integer ruc;
+	private String ruc;
 
 	public Integer getId() {
 		return id;
