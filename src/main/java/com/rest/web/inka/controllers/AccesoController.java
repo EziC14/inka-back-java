@@ -24,6 +24,8 @@ import com.rest.web.inka.models.Usuario;
 import com.rest.web.inka.models.UsuarioDto;
 import com.rest.web.inka.service.IUsuarioService;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+
 @RestController
 @RequestMapping("/api/v1")
 public class AccesoController {
@@ -49,6 +51,7 @@ public class AccesoController {
 			Integer id = user.get().getId();
 			Usuario usu =  usuarioDao.findById(id).orElse(null);
 			UsuarioDto dto = mapper.map(usu, UsuarioDto.class);
+			Integer idUsuario = dto.getId();
 			String nombre = dto.getPerfilUsuario().getNombres(); 
 			String apellido = dto.getPerfilUsuario().getApellidos();
 			String telefono = dto.getPerfilUsuario().getTelefono();
@@ -57,7 +60,7 @@ public class AccesoController {
 				rol_name = rol.getNombre();
 			}
 			String accessToken = jwtUtil.generarToken(user.get());			
-			AuthResponse response = new AuthResponse(nombre,apellido,telefono,request.getCorreo(), accessToken, rol_name);
+			AuthResponse response = new AuthResponse(idUsuario,nombre,apellido,telefono,request.getCorreo(), accessToken, rol_name);
 			return ResponseEntity.ok(response);		
 		} catch (BadCredentialsException e) {	
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

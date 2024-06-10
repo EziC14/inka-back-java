@@ -2,6 +2,7 @@ package com.rest.web.inka.jwt;
 
 public class AuthResponse {
 
+	private Integer id;
 	private String correo;
 	private String accessToken;
 	private String nombre;
@@ -11,7 +12,8 @@ public class AuthResponse {
 	
 	
 	
-	public AuthResponse(String nombre, String apellido, String telefono ,String correo, String accessToken, String rol) {
+	public AuthResponse(Integer id, String nombre, String apellido, String telefono ,String correo, String accessToken, String rol) {
+		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.telefono = telefono;
@@ -21,6 +23,13 @@ public class AuthResponse {
 	}
 	public AuthResponse() {
 		
+	}
+
+	public Integer getId() {
+		return id;
+	}		
+	public void setId(Integer id) {
+		this.id = id;
 	}
 	public String getRol() {
 		return rol;
