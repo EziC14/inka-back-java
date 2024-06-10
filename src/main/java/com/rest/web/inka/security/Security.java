@@ -67,7 +67,7 @@ public class Security {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 	  CorsConfiguration configuration = new CorsConfiguration();
-	  configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+	  configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200","https://inka-angular.vercel.app"));
 	  configuration.setAllowedMethods(Arrays.asList("GET","POST","PATCH", "PUT", "DELETE", "OPTIONS", "HEAD"));
 	  configuration.setAllowCredentials(true);
 	  configuration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
