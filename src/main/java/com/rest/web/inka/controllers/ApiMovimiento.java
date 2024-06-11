@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.rest.web.inka.models.Movimiento;
 import com.rest.web.inka.models.MovimientoDto;
+import com.rest.web.inka.models.Producto;
 import com.rest.web.inka.models.Provedor;
 import com.rest.web.inka.models.TipoMovimiento;
 import com.rest.web.inka.service.IMovimientoService;
+import com.rest.web.inka.service.IProductoService;
 import com.rest.web.inka.service.IProvedorService;
 import com.rest.web.inka.service.ITipoMovimientoService;
 import com.rest.web.inka.utilidades.PaginationMod;
@@ -39,6 +41,9 @@ public class ApiMovimiento {
 	
 	@Autowired
 	private ITipoMovimientoService tipoMovimiento;
+	
+	@Autowired
+	private IProductoService productoService;
 
 	@GetMapping("/index/{nombre}")
 	public String index(@PathVariable String nombre) {
@@ -94,8 +99,13 @@ public class ApiMovimiento {
 	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL TIPO");
 	    }
 	    
+		Producto producto = productoService.buscarIdProducto(movimiento.getProducto().getId());
+	    if (producto == null) {
+	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL PRODUCTO");
+	    }
+	    
 	    if (tipMov.getId() == 1) {
-	        // Si el tipo de movimiento es 1, se debe validar la presencia del proveedor
+	        // Si el tipo de movimiento es 1 (ingreso), validar proveedor y actualizar cantidad del producto
 	        if (movimiento.getProvedor() == null || movimiento.getProvedor().getId() == null) {
 	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "El proveedor es requerido");
 	        }
@@ -104,16 +114,27 @@ public class ApiMovimiento {
 	        if (prov == null) {
 	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL PROVEEDOR");
 	        }
+	        
+	        Integer newStock = Integer.parseInt(producto.getStock() + movimiento.getCantidad());
+	        producto.setStock(newStock);
 	    } else if (tipMov.getId() == 2) {
-	        // Si el tipo de movimiento es 2, no se requiere proveedor
+	        // Si el tipo de movimiento es 2 (salida), validar que no haya proveedor y que haya suficiente stock
 	        if (movimiento.getProvedor() != null && movimiento.getProvedor().getId() != null) {
 	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "No se debe especificar proveedor para este tipo de movimiento");
 	        }
+	        
+	        if (producto.getStock() < Integer.parseInt(movimiento.getCantidad())) {
+	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "No hay suficiente stock para realizar la salida");
+	        }
+	        
+	        producto.setStock(producto.getStock() - Integer.parseInt(movimiento.getCantidad()));
 	    }
-
+	    
+	    productoService.guardar(producto);
 	    movimientoService.guardar(movimiento);
 	    return Utilidades.generateResponseTrue(HttpStatus.CREATED, "MOVIMIENTO CREADO CORRECTAMENTE");
 	}
+
 
 	@PutMapping("/movimiento")
 	public ResponseEntity<Object> actualizarMovimiento(@RequestBody Movimiento movimiento) {
