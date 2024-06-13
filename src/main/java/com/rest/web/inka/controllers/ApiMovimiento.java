@@ -1,11 +1,14 @@
 package com.rest.web.inka.controllers;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,7 +60,9 @@ public class ApiMovimiento {
 	
 	@GetMapping("/listar")
 	public Object listar(@RequestParam(required = false, defaultValue = "0") Integer page,
-	                     @RequestParam(required = false, defaultValue = "") String nombre) {
+	                     @RequestParam(required = false, defaultValue = "") String nombre,
+	                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateFrom,
+	                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dateTo) {
 	    
 	    HashMap<Object, Object> map = new HashMap<Object, Object>();
 
@@ -71,7 +76,16 @@ public class ApiMovimiento {
 	        nombre = "";
 	    }
 
-	    PaginationMod<MovimientoDto> enviar = movimientoService.listarMovimientoDtoPaginado(nombre, 
+	    // Verificar si las fechas son válidas
+	    if (dateFrom != null && dateTo != null && dateFrom.isAfter(dateTo)) {
+	        return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "La fecha 'dateFrom' no puede ser posterior a la fecha 'dateTo'");
+	    }
+
+	    // Convertir LocalDate a Date
+	    Date fromDate = (dateFrom != null) ? java.sql.Date.valueOf(dateFrom) : null;
+	    Date toDate = (dateTo != null) ? java.sql.Date.valueOf(dateTo) : null;
+
+	    PaginationMod<MovimientoDto> enviar = movimientoService.listarMovimientoDtoPaginado(nombre, fromDate, toDate, 
 	                                                PageRequest.of(page, 9, Sort.by("id").descending()));
 
 	    // Verificar si se obtuvo algún resultado

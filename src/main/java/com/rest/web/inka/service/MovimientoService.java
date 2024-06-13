@@ -1,5 +1,6 @@
 package com.rest.web.inka.service;
 
+import java.sql.Date;
 import java.util.Arrays;
 
 import org.modelmapper.ModelMapper;
@@ -23,14 +24,25 @@ public class MovimientoService implements IMovimientoService {
 	private IMovimientoDao movimientoDao;
 	
 	@Override
-	public PaginationMod<MovimientoDto> listarMovimientoDtoPaginado(String nombre, Pageable pageable) {
-		Page<Movimiento> paginacion = movimientoDao.findByNombreContaining(nombre, pageable);
-		
-		PaginationMod<MovimientoDto> paginationMod = new PaginationMod<MovimientoDto>();
-		MovimientoDto[] entityDtos = mapper.map(paginacion.getContent(),MovimientoDto[].class);
-		paginationMod.setValue(paginacion, Arrays.asList(entityDtos));
-		return paginationMod;
+	public PaginationMod<MovimientoDto> listarMovimientoDtoPaginado(String nombre, Date dateFrom, Date dateTo, Pageable pageable) {
+	    Page<Movimiento> paginacion;
+
+	    if (dateFrom != null && dateTo != null) {
+	        paginacion = movimientoDao.findByNombreContainingAndFechaBetween(nombre, dateFrom, dateTo, pageable);
+	    } else if (dateFrom != null) {
+	        paginacion = movimientoDao.findByNombreContainingAndFechaAfter(nombre, dateFrom, pageable);
+	    } else if (dateTo != null) {
+	        paginacion = movimientoDao.findByNombreContainingAndFechaBefore(nombre, dateTo, pageable);
+	    } else {
+	        paginacion = movimientoDao.findByNombreContaining(nombre, pageable);
+	    }
+
+	    PaginationMod<MovimientoDto> paginationMod = new PaginationMod<MovimientoDto>();
+	    MovimientoDto[] entityDtos = mapper.map(paginacion.getContent(), MovimientoDto[].class);
+	    paginationMod.setValue(paginacion, Arrays.asList(entityDtos));
+	    return paginationMod;
 	}
+
 	
 
 	@Override
