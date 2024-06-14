@@ -129,7 +129,7 @@ public class ApiMovimiento {
 	            return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "NO SE ENCONTRÓ EL PROVEEDOR");
 	        }
 	        
-	        Integer newStock = Integer.parseInt(producto.getStock() + movimiento.getCantidad());
+	        Integer newStock = producto.getStock() + Integer.parseInt(movimiento.getCantidad());
 	        producto.setStock(newStock);
 	    } else if (tipMov.getId() == 2) {
 	        // Si el tipo de movimiento es 2 (salida), validar que no haya proveedor y que haya suficiente stock
