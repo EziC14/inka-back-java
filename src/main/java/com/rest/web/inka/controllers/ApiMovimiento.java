@@ -1,9 +1,14 @@
 package com.rest.web.inka.controllers;
 
+import java.lang.reflect.Array;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
-
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rest.web.inka.models.Movimiento;
 import com.rest.web.inka.models.MovimientoDto;
 import com.rest.web.inka.models.Producto;
@@ -97,6 +104,54 @@ public class ApiMovimiento {
 	    return map;
 	}
 	
+	@GetMapping("/dashboard")
+    public String getDashboard() {
+        List<Movimiento> movimientos = movimientoService.getListMovimiento();
+        Map<String, Integer> proveedorCantidadMap = new HashMap<>();
+
+        // Iterar sobre los movimientos
+        for (Movimiento movimiento : movimientos) {
+            if (movimiento.getProvedor() != null) {
+                String nombreProvedor = movimiento.getProvedor().getNombre();
+                String cantidadStr = movimiento.getCantidad();
+                Integer cantidad = null;
+                try {
+                    cantidad = Integer.parseInt(cantidadStr);
+                } catch (NumberFormatException e) {
+                    System.out.println("Error al convertir cantidad a Integer para el movimiento con ID: " + movimiento.getId());
+                    e.printStackTrace();
+                    continue; // Continuar con el siguiente movimiento si hay error
+                }
+
+                // Sumar las cantidades si el proveedor ya existe en el mapa
+                proveedorCantidadMap.merge(nombreProvedor, cantidad, Integer::sum);
+            } else {
+                // Manejar el caso donde provedor es null, si es necesario
+                System.out.println("Proveedor es null para el movimiento con ID: " + movimiento.getId());
+            }
+        }
+
+        // Convertir el mapa a una lista de mapas
+        List<Map<String, Object>> data = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : proveedorCantidadMap.entrySet()) {
+            Map<String, Object> entryMap = new HashMap<>();
+            entryMap.put("nombre", entry.getKey());
+            entryMap.put("cantidad", entry.getValue());
+            data.add(entryMap);
+        }
+
+        // Convertir data a formato JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonData = "";
+        try {
+            jsonData = objectMapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return jsonData;
+    }
+
 	@GetMapping("/movimiento/{id}")
 	public Movimiento listarId(@PathVariable Integer id) {
 		return movimientoService.buscarIdMovimiento(id);

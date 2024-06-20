@@ -1,7 +1,7 @@
 package com.rest.web.inka.service;
 
 import java.sql.Date;
-import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 
@@ -17,4 +17,6 @@ public interface IMovimientoService {
 	Movimiento guardar(Movimiento movimiento);
 	
 	void eliminar(Integer id);
+
+	List<Movimiento> getListMovimiento();
 }
