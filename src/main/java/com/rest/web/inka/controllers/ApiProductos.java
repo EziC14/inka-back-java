@@ -209,7 +209,7 @@ public class ApiProductos {
 			return Utilidades.generateResponse(HttpStatus.BAD_REQUEST, "EL PRODUCTO NO SE ENCONTRÃ“");
 		}
 		
-		producto.setStock(producto.getStock());
+		producto.setStock(pr.getStock());
 		producto.setImagen(producto.getImagen());
 		productoService.guardar(producto);
 
