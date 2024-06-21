@@ -2,6 +2,7 @@ package com.rest.web.inka.service;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,10 @@ public class MovimientoService implements IMovimientoService {
 	@Override
 	public void eliminar(Integer id) {
 		movimientoDao.deleteById(id);	
+	}
+
+	@Override
+	public List<Movimiento> getListMovimiento() {
+		return movimientoDao.findAll();
 	}
 }
