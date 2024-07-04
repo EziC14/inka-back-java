@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reporte de Movimientos - Mejora de Gestión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        h4 {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #706464;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        /* Estilos para la columna de Precio */
+        .precio {
+            text-align: right;
+        }
+        .resumen-table {
+            margin-top: 40px;
+        }
+        .resumen-table th {
+            background-color: #505050;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reporte de Movimientos</h1>
+        <h4 th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">Fecha de Generación del Reporte: </h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tipo de Movimiento</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Producto</th>
+                    <th>Proveedor</th>
+                    <th>Precio</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="movimiento : ${movimientos}">
+                    <td th:text="${movimiento.tipo.nombre}"></td>
+                    <td th:text="${movimiento.cantidad}"></td>
+                    <td th:text="${#dates.format(movimiento.fecha, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${movimiento.producto.nombre}"></td>
+                    <td th:text="${movimiento.provedor?.nombre ?: 'Registro de salida - sin proveedor'}"></td>
+                    <td class="precio" th:text="${movimiento.producto.precio}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

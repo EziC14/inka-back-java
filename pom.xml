@@ -80,8 +80,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-pdf</artifactId>
-			<version>9.1.22</version>
+			<artifactId>flying-saucer-pdf-itext5</artifactId>
+			<version>9.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.jtidy</groupId>

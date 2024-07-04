@@ -1,152 +1,76 @@
 <!DOCTYPE html>
-<html lang="es">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Reporte de Stock - Mejora de Gestión</title>
+    <title>Reporte de Stock</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f9f9f9;
+            background-color: #ffffff;
         }
         h1 {
             text-align: center;
             color: #333;
             margin-bottom: 20px;
         }
-        .container {
-            max-width: 1000px;
-            margin: auto;
-            padding: 2rem;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
+        h4 {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
-            border-collapse: collapse;
             margin-bottom: 20px;
-            border-radius: 8px;
-            overflow: hidden;
         }
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
         }
         th {
-            background-color: #007bff;
+            background-color: #706464;
             color: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 1;
         }
         tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        tr:last-child td {
-            border-bottom: none;
+            background-color: #fff;
         }
         .stock-low {
-            background-color: #ffc107;
-            color: #333;
+            font-weight: bold;
+            color: #e7c254;
         }
         .stock-critical {
-            background-color: #dc3545;
-            color: #fff;
-        }
-        .stock-sufficient {
-            background-color: #28a745;
-            color: #fff;
-        }
-        #chartContainer {
-            width: 100%;
-            max-width: 800px;
-            margin: 0 auto;
+            font-weight: bold;
+            color: #c45d67;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Reporte de Stock - Mejora de Gestión</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Precio</th>
-                    <th>Tipo de Producto</th>
-                    <th>Stock</th>
-                    <th>Estado de Stock</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="producto : ${productos}">
-                    <td th:text="${producto.id}"></td>
-                    <td th:text="${producto.nombre}"></td>
-                    <td th:text="${producto.precio}"></td>
-                    <td th:text="${producto.tipoProducto.nombre}"></td>
-                    <td th:text="${producto.stock}"></td>
-                    <td th:classappend="${producto.stock <= 10} ? 'stock-critical' : (${producto.stock <= 20} ? 'stock-low' : 'stock-sufficient')"></td>
-                </tr>
-            </tbody>
-        </table>
-        <div id="chartContainer">
-            <canvas id="stockChart"></canvas>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        const productos = /*[[${productos}]]*/ [];
-
-        const labels = productos.map(producto => producto.nombre);
-        const data = productos.map(producto => producto.stock);
-        const backgroundColors = productos.map(producto => {
-            if (producto.stock <= 10) {
-                return 'rgba(220, 53, 69, 0.5)'; // Crítico
-            } else if (producto.stock <= 20) {
-                return 'rgba(255, 193, 7, 0.5)'; // Bajo
-            } else {
-                return 'rgba(40, 167, 69, 0.5)'; // Suficiente
-            }
-        });
-        const borderColors = productos.map(producto => {
-            if (producto.stock <= 10) {
-                return 'rgba(220, 53, 69, 1)'; // Crítico
-            } else if (producto.stock <= 20) {
-                return 'rgba(255, 193, 7, 1)'; // Bajo
-            } else {
-                return 'rgba(40, 167, 69, 1)'; // Suficiente
-            }
-        });
-
-        const ctx = document.getElementById('stockChart').getContext('2d');
-        const stockChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Stock',
-                    data: data,
-                    backgroundColor: backgroundColors,
-                    borderColor: borderColors,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 30
-                    }
-                }
-            }
-        });
-        /*]]>*/
-    </script>
+    <h1>Reporte de Stock</h1>
+    <h4 th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm')}">Fecha de Generación del Reporte: </h4>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Tipo de Producto</th>
+                <th>Stock</th>
+                <th>Estado de Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="producto : ${productos}">
+                <td th:text="${producto.id}"></td>
+                <td th:text="${producto.nombre}"></td>
+                <td th:text="${producto.precio}"></td>
+                <td th:text="${producto.tipoProducto.nombre}"></td>
+                <td th:text="${producto.stock}"></td>
+                <td style="font-weight: bold;" th:classappend="${producto.stock <= 10} ? 'stock-critical' : (${producto.stock <= 20} ? 'stock-low' : '')">
+                    <span th:text="${producto.stock <= 10} ? 'Crítico' : (${producto.stock <= 20} ? 'Bajo' : 'Suficiente')"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

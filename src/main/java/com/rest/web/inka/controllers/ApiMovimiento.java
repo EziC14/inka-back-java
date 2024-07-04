@@ -70,7 +70,7 @@ public class ApiMovimiento {
         File pdfFile = pdfService.generateMovimientoPdf();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-Disposition", "inline; filename=report_transaction.pdf");
+        headers.add("Content-Disposition", "inline; filename=report_movimiento.pdf");
 
         InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
 

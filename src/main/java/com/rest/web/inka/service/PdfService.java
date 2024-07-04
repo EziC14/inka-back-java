@@ -32,7 +32,7 @@ public class PdfService {
     }
 
     public File generateMovimientoPdf() throws Exception {
-        return generatePdf("report_movimiento", getContextMovimientoListPdf());
+        return generatePdf("report_transaction", getContextMovimientoListPdf());
     }
 
     private File generatePdf(String templateName, Context context) throws Exception {
@@ -63,7 +63,7 @@ public class PdfService {
     private File renderPdf(String html, String templateName) throws Exception {
         File file = File.createTempFile(templateName, ".pdf");
         OutputStream outputStream = new FileOutputStream(file);
-        ITextRenderer renderer = new ITextRenderer();
+        ITextRenderer renderer =new ITextRenderer(20f * 4f / 3f, 20);
         renderer.setDocumentFromString(html, new ClassPathResource(PDF_RESOURCES).getURL().toExternalForm());
         renderer.layout();
         renderer.createPDF(outputStream);
