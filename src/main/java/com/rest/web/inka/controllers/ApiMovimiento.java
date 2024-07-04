@@ -1,5 +1,7 @@
 package com.rest.web.inka.controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.lang.reflect.Array;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -11,9 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,8 +40,11 @@ import com.rest.web.inka.service.IMovimientoService;
 import com.rest.web.inka.service.IProductoService;
 import com.rest.web.inka.service.IProvedorService;
 import com.rest.web.inka.service.ITipoMovimientoService;
+import com.rest.web.inka.service.PdfService;
 import com.rest.web.inka.utilidades.PaginationMod;
 import com.rest.web.inka.utilidades.Utilidades;
+import org.springframework.http.MediaType;
+
 
 @RestController
 @RequestMapping("/api/movimientos")
@@ -55,6 +62,25 @@ public class ApiMovimiento {
 	@Autowired
 	private IProductoService productoService;
 
+	@Autowired
+    private PdfService pdfService;
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> movimientosReport() throws Exception {
+        File pdfFile = pdfService.generateMovimientoPdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=report_transaction.pdf");
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
+	
 	@GetMapping("/index/{nombre}")
 	public String index(@PathVariable String nombre) {
 		return "METODO GET: " + nombre;

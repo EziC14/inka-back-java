@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.rest.web.inka.dao.IMovimientoDao;
 import com.rest.web.inka.models.Movimiento;
 import com.rest.web.inka.models.MovimientoDto;
+import com.rest.web.inka.models.Producto;
 import com.rest.web.inka.utilidades.PaginationMod;
 
 @Service
@@ -65,4 +66,5 @@ public class MovimientoService implements IMovimientoService {
 	public List<Movimiento> getListMovimiento() {
 		return movimientoDao.findAll();
 	}
+
 }

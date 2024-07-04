@@ -55,6 +55,7 @@ public class Security {
 		http.addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 		http.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/api/productos/images/**").permitAll()
+					.requestMatchers("/api/productos/pdf").permitAll()
 					.requestMatchers("/api/v1/login").permitAll()
 					.requestMatchers("/api/productos/**").hasAnyAuthority("NUEVO ROL","ROLE_ADMIN")
 					.anyRequest().authenticated());
