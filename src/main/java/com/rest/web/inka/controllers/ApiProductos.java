@@ -2,6 +2,8 @@ package com.rest.web.inka.controllers;
 
 
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +39,7 @@ import com.rest.web.inka.models.TipoProducto;
 import com.rest.web.inka.service.ICategoriaProductoService;
 import com.rest.web.inka.service.IProductoService;
 import com.rest.web.inka.service.ITipoProductoService;
+import com.rest.web.inka.service.PdfService;
 import com.rest.web.inka.utilidades.PaginationMod;
 import com.rest.web.inka.utilidades.Utilidades;
 
@@ -56,6 +60,25 @@ public class ApiProductos {
 	
 	@Autowired
 	private ITipoProductoService tipoProducto;
+
+	@Autowired
+    private PdfService pdfService;
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<InputStreamResource> productosReport() throws Exception {
+        File pdfFile = pdfService.generateProductoPdf();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=report_stock.pdf");
+
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
+
+        return ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
+    }
 
 	@GetMapping("/index/{nombre}")
 	public String index(@PathVariable String nombre) {

@@ -45,12 +45,16 @@ public class ProductoService implements IProductoService{
 		paginationMod.setValue(paginacion, productoDtos);
 		return paginationMod;
 	}
+	
+	public List<Producto> list() {
+        return productoDao.findAll();
+    }
 
 	@Override
 	public Producto buscarIdProducto(Integer id) {
 		return productoDao.findById(id).orElse(null);
 	}
-
+	
 	@Override
 	public Producto guardar(Producto producto) {
 		return productoDao.save(producto);

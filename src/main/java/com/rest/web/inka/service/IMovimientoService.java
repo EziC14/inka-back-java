@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import com.rest.web.inka.models.Movimiento;
-import com.rest.web.inka.models.MovimientoDto;
+import com.rest.web.inka.models.MovimientoDto;     
 import com.rest.web.inka.utilidades.PaginationMod;
 
 public interface IMovimientoService {

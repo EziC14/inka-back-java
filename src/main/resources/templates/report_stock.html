@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Reporte de Stock - Mejora de Gestión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .stock-low {
+            background-color: #ffc107;
+            color: #333;
+        }
+        .stock-critical {
+            background-color: #dc3545;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reporte de Stock - Mejora de Gestión</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Precio</th>
+                <th>Tipo de Producto</th>
+                <th>Stock</th>
+                <th>Estado de Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="producto : ${productos}">
+                <td th:text="${producto.id}"></td>
+                <td th:text="${producto.nombre}"></td>
+                <td th:text="${producto.precio}"></td>
+                <td th:text="${producto.tipoProducto.nombre}"></td>
+                <td th:text="${producto.stock}"></td>
+                <td th:class="${producto.stock <= 10} ? 'stock-critical' : (${producto.stock <= 20} ? 'stock-low' : '')">
+                    <span th:text="${producto.stock <= 10} ? 'Crítico' : (${producto.stock <= 20} ? 'Bajo' : 'Suficiente')"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
