@@ -9,5 +9,6 @@ import com.rest.web.inka.models.Producto;
 public interface IProductoDao extends JpaRepository<Producto, Integer>{
 	
 	public Page<Producto> findByNombreContaining(String title, Pageable pageable);
-
+	
+	public Page<Producto> findByStockLessThan(Integer stock, Pageable pageable);
 }

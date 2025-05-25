@@ -18,7 +18,6 @@ import com.rest.web.inka.utilidades.PaginationMod;
 @Service
 public class ProductoService implements IProductoService{
 
-	
 	@Autowired
 	private ModelMapper mapper;
 	
@@ -40,7 +39,22 @@ public class ProductoService implements IProductoService{
 		Page<Producto> paginacion = productoDao.findByNombreContaining(nombre, pageable);
 		
 		PaginationMod<ProductoDto> paginationMod = new PaginationMod<>();
-		List<ProductoDto> productoDtos = paginacion.getContent().stream().map(producto -> mapper.map(producto, ProductoDto.class)).collect(Collectors.toList());
+		List<ProductoDto> productoDtos = paginacion.getContent().stream()
+			.map(producto -> mapper.map(producto, ProductoDto.class))
+			.collect(Collectors.toList());
+		
+		paginationMod.setValue(paginacion, productoDtos);
+		return paginationMod;
+	}
+
+	@Override
+	public PaginationMod<ProductoDto> listarProductosBajoStock(Integer stockMinimo, Pageable pageable) {
+		Page<Producto> paginacion = productoDao.findByStockLessThan(stockMinimo, pageable);
+		
+		PaginationMod<ProductoDto> paginationMod = new PaginationMod<>();
+		List<ProductoDto> productoDtos = paginacion.getContent().stream()
+			.map(producto -> mapper.map(producto, ProductoDto.class))
+			.collect(Collectors.toList());
 		
 		paginationMod.setValue(paginacion, productoDtos);
 		return paginationMod;

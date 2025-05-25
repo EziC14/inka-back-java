@@ -90,6 +90,26 @@ public class ApiProductos {
 		return ResponseEntity.ok("METODO GET");
 	}
 	
+	@GetMapping("/listar/bajo-stock")
+	public ResponseEntity<Object> listarBajoStock(
+			@RequestParam(required = false, defaultValue = "0") Integer page, 
+			@RequestParam(required = false, defaultValue = "10") Integer stockMinimo) {
+		
+		try {
+			PaginationMod<ProductoDto> productos = productoService.listarProductosBajoStock(
+					stockMinimo, 
+					PageRequest.of(page, 10, Sort.by("stock").ascending()));
+			
+			HashMap<String, Object> response = new HashMap<>();
+			response.put("productos", productos);
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			HashMap<String, String> error = new HashMap<>();
+			error.put("error", "Error al obtener productos con bajo stock: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
+	}
+	
 	@GetMapping("/listar")
 	public Object listar(@RequestParam(required = false, defaultValue = "0") Integer page, @RequestParam(required = false, defaultValue = "") String nombre) {
 	

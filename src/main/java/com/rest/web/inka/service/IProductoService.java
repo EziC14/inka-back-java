@@ -12,6 +12,8 @@ public interface IProductoService {
 
 	PaginationMod<ProductoDto> buscarProductoPorNombrePaginado(String nombre, Pageable pageable);
 
+	PaginationMod<ProductoDto> listarProductosBajoStock(Integer stockMinimo, Pageable pageable);
+
 	Producto buscarIdProducto(Integer id);
 	
 	Producto guardar(Producto producto);
